@@ -4,20 +4,24 @@
 
 @if (User.Identity?.IsAuthenticated == true)
 {
-    <div class="text-center mb-4">
-        <h1 class="display-5">WhatsApp Business Inbox</h1>
-        <p class="lead text-muted">Send and receive WhatsApp messages, run campaigns and collect feedback.</p>
-    </div>
-
-    <div class="row g-3">
-        <div class="col-md-3"><a asp-controller="Chat" asp-action="Index" class="text-decoration-none"><div class="card h-100"><div class="card-body"><h5>Inbox</h5><p class="text-muted mb-0">Live conversations with customers.</p></div></div></a></div>
-        <div class="col-md-3"><a asp-controller="Contacts" asp-action="Index" class="text-decoration-none"><div class="card h-100"><div class="card-body"><h5>Contacts</h5><p class="text-muted mb-0">Manage contacts and CSV import.</p></div></div></a></div>
-        <div class="col-md-3"><a asp-controller="Templates" asp-action="Index" class="text-decoration-none"><div class="card h-100"><div class="card-body"><h5>Templates</h5><p class="text-muted mb-0">Sync and manage Meta templates.</p></div></div></a></div>
-        <div class="col-md-3"><a asp-controller="Campaigns" asp-action="Index" class="text-decoration-none"><div class="card h-100"><div class="card-body"><h5>Campaigns</h5><p class="text-muted mb-0">Bulk messaging in the background.</p></div></div></a></div>
-        <div class="col-md-3"><a asp-controller="Feedbacks" asp-action="Index" class="text-decoration-none"><div class="card h-100"><div class="card-body"><h5>Feedback</h5><p class="text-muted mb-0">Post-call satisfaction replies.</p></div></div></a></div>
+    <section class="welcome-panel">
+        <div>
+            <span class="eyebrow">MONDAY, OCTOBER 10, 2026</span>
+            <h1>Make every message<br /><em>matter.</em></h1>
+            <p>Your customer conversations, campaigns and insights — in one calm, connected workspace.</p>
+        </div>
+        <div class="welcome-orbit" aria-hidden="true"><span></span><span></span><span></span><b>W</b></div>
+    </section>
+    <div class="section-heading"><div><span class="eyebrow">YOUR WORKSPACE</span><h2>Good morning, @User.Identity?.Name</h2></div><span class="live-pill"><i></i> Live workspace</span></div>
+    <div class="dashboard-grid">
+        <a asp-controller="Chat" asp-action="Index" class="feature-card feature-card-dark"><span class="card-icon">↗</span><div><span class="card-kicker">COMMUNICATIONS</span><h3>Inbox</h3><p>Stay close to every customer conversation.</p></div><span class="card-arrow">→</span></a>
+        <a asp-controller="Contacts" asp-action="Index" class="feature-card"><span class="card-icon">○</span><div><span class="card-kicker">AUDIENCE</span><h3>Contacts</h3><p>Build a clearer picture of your customers.</p></div><span class="card-arrow">→</span></a>
+        <a asp-controller="Campaigns" asp-action="Index" class="feature-card feature-card-wide"><span class="card-icon">◒</span><div><span class="card-kicker">GROWTH</span><h3>Campaigns</h3><p>Reach the right people with thoughtful, timely broadcasts.</p></div><span class="card-arrow">→</span></a>
+        <a asp-controller="Templates" asp-action="Index" class="feature-card"><span class="card-icon">▤</span><div><span class="card-kicker">CONTENT</span><h3>Templates</h3><p>Keep your messaging consistent and on-brand.</p></div><span class="card-arrow">→</span></a>
+        <a asp-controller="Feedbacks" asp-action="Index" class="feature-card"><span class="card-icon">♡</span><div><span class="card-kicker">INSIGHTS</span><h3>Feedback</h3><p>Turn customer sentiment into your next move.</p></div><span class="card-arrow">→</span></a>
         @if (User.IsInRole("Admin"))
         {
-            <div class="col-md-3"><a asp-controller="Admin" asp-action="Index" class="text-decoration-none"><div class="card h-100"><div class="card-body"><h5>Admin</h5><p class="text-muted mb-0">Tenants, credentials and stats.</p></div></div></a></div>
+            <a asp-controller="Admin" asp-action="Index" class="feature-card feature-card-admin"><span class="card-icon">⌘</span><div><span class="card-kicker">CONTROL CENTER</span><h3>Admin</h3><p>Manage your workspace, credentials and users.</p></div><span class="card-arrow">→</span></a>
         }
     </div>
 }

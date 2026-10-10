@@ -9,51 +9,39 @@
     <link rel="stylesheet" href="~/WhatsAppBusinessInbox.styles.css" asp-append-version="true" />
 </head>
 <body>
-    <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
-            <div class="container-fluid">
-                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">WhatsApp Inbox</a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                        aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-                    <ul class="navbar-nav flex-grow-1">
-                        @if (User.Identity?.IsAuthenticated == true)
-                        {
-                            <li class="nav-item">
-                                <a class="nav-link text-dark" asp-controller="Chat" asp-action="Index">Inbox</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link text-dark" asp-controller="Contacts" asp-action="Index">Contacts</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link text-dark" asp-controller="Templates" asp-action="Index">Templates</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link text-dark" asp-controller="Campaigns" asp-action="Index">Campaigns</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link text-dark" asp-controller="Feedbacks" asp-action="Index">Feedback</a>
-                            </li>
-                            @if (User.IsInRole("Admin"))
-                            {
-                                <li class="nav-item">
-                                    <a class="nav-link text-dark" asp-controller="Admin" asp-action="Index">Admin</a>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="nav-link text-dark" asp-controller="Admin" asp-action="Users">Users</a>
-                                </li>
-                            }
-                        }
-                    </ul>
-                    <partial name="_LoginPartial" />
-                </div>
-            </div>
-        </nav>
-    </header>
-    <div class="container-fluid">
-        <main role="main" class="pb-3">
+    <div class="app-shell">
+        <aside class="app-sidebar">
+            <a class="brand" asp-area="" asp-controller="Home" asp-action="Index">
+                <span class="brand-mark">W</span>
+                <span><strong>wa<span>ve</span></strong><small>business inbox</small></span>
+            </a>
+            @if (User.Identity?.IsAuthenticated == true)
+            {
+                <div class="workspace-label">WORKSPACE</div>
+                <nav class="app-nav" aria-label="Main navigation">
+                    <a asp-controller="Chat" asp-action="Index"><span class="nav-glyph">↗</span>Inbox<span class="nav-dot"></span></a>
+                    <a asp-controller="Contacts" asp-action="Index"><span class="nav-glyph">○</span>Contacts</a>
+                    <a asp-controller="Templates" asp-action="Index"><span class="nav-glyph">▤</span>Templates</a>
+                    <a asp-controller="Campaigns" asp-action="Index"><span class="nav-glyph">◒</span>Campaigns</a>
+                    <a asp-controller="Feedbacks" asp-action="Index"><span class="nav-glyph">♡</span>Feedback</a>
+                    @if (User.IsInRole("Admin"))
+                    {
+                        <div class="workspace-label admin-label">ADMINISTRATION</div>
+                        <a asp-controller="Admin" asp-action="Index"><span class="nav-glyph">⌘</span>Admin</a>
+                        <a asp-controller="Admin" asp-action="Users"><span class="nav-glyph">◎</span>Users</a>
+                    }
+                </nav>
+            }
+            <div class="sidebar-footer"><span class="status-pulse"></span>All systems operational</div>
+        </aside>
+        <div class="app-main">
+            <header class="topbar">
+                <div class="mobile-brand"><span class="brand-mark">W</span><strong>wave</strong></div>
+                <div class="topbar-spacer"></div>
+                <partial name="_LoginPartial" />
+            </header>
+            <div class="page-container">
+                <main role="main" class="pb-3">
             @if (TempData["AdminMessage"] != null)
             {
                 <div class="alert alert-success">@TempData["AdminMessage"]</div>
@@ -83,14 +71,11 @@
                 <div class="alert alert-success">@TempData["FeedbackMessage"]</div>
             }
             @RenderBody()
-        </main>
-    </div>
-
-    <footer class="border-top footer text-muted">
-        <div class="container">
-            &copy; 2026 - WhatsAppBusinessInbox
+                </main>
+            </div>
+            <footer class="app-footer">© 2026 Wave Business Inbox <span>•</span> Built for meaningful conversations</footer>
         </div>
-    </footer>
+    </div>
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
