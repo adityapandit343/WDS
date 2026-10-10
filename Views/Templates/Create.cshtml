@@ -1,0 +1,48 @@
+@model WhatsAppBusinessInbox.Models.Template
+@{
+    ViewData["Title"] = "Create template";
+}
+
+<h2>Create template</h2>
+
+<div class="row">
+    <div class="col-md-7">
+        <form asp-action="Create" method="post">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+            <div class="mb-3">
+                <label asp-for="Name" class="form-label"></label>
+                <input asp-for="Name" class="form-control" placeholder="order_update" />
+                <span asp-validation-for="Name" class="text-danger"></span>
+            </div>
+            <div class="mb-3">
+                <label asp-for="Language" class="form-label"></label>
+                <input asp-for="Language" class="form-control" />
+                <span asp-validation-for="Language" class="text-danger"></span>
+            </div>
+            <div class="mb-3">
+                <label asp-for="Category" class="form-label"></label>
+                <input asp-for="Category" class="form-control" placeholder="MARKETING / UTILITY / AUTHENTICATION" />
+            </div>
+            <div class="mb-3">
+                <label asp-for="Status" class="form-label"></label>
+                <input asp-for="Status" class="form-control" placeholder="pending" />
+            </div>
+            <div class="mb-3">
+                <label asp-for="BodyText" class="form-label"></label>
+                <textarea asp-for="BodyText" class="form-control" rows="3" placeholder="Hi {{1}}, your order {{2}} has shipped."></textarea>
+            </div>
+            <div class="mb-3">
+                <label asp-for="ButtonsJson" class="form-label"></label>
+                <textarea asp-for="ButtonsJson" class="form-control" rows="3" placeholder='[{"type":"QUICK_REPLY","text":"Track"}]'></textarea>
+            </div>
+
+            <button type="submit" class="btn btn-primary">Save</button>
+            <a asp-action="Index" class="btn btn-secondary">Cancel</a>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

@@ -1,0 +1,29 @@
+@model IEnumerable<WhatsAppBusinessInbox.Models.AdminUserViewModel>
+@{
+    ViewData["Title"] = "Users";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <h2 class="mb-0">Users</h2>
+    <a asp-controller="Account" asp-action="Register" class="btn btn-primary">Create user</a>
+</div>
+
+<table class="table align-middle">
+    <thead>
+        <tr>
+            <th>Email</th>
+            <th>Roles</th>
+            <th>Tenant</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var user in Model)
+        {
+            <tr>
+                <td>@user.Email</td>
+                <td>@string.Join(", ", user.Roles)</td>
+                <td>@user.TenantId</td>
+            </tr>
+        }
+    </tbody>
+</table>

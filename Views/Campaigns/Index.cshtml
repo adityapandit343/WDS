@@ -1,0 +1,39 @@
+@model IEnumerable<WhatsAppBusinessInbox.Models.Campaign>
+@{
+    ViewData["Title"] = "Campaigns";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <h2 class="mb-0">Campaigns</h2>
+    <a asp-action="Create" class="btn btn-primary">New campaign</a>
+</div>
+
+<table class="table align-middle">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Template</th>
+            <th>Status</th>
+            <th>Progress</th>
+            <th>Created</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var campaign in Model)
+        {
+            <tr>
+                <td>@campaign.Name</td>
+                <td>@campaign.TemplateName</td>
+                <td>
+                    <span class="badge @(campaign.Status == "completed" ? "bg-success" : campaign.Status == "running" ? "bg-warning text-dark" : "bg-secondary")">
+                        @campaign.Status
+                    </span>
+                </td>
+                <td>@campaign.SentCount / @campaign.TotalCount sent, @campaign.FailedCount failed</td>
+                <td>@campaign.CreatedAt.ToString("yyyy-MM-dd HH:mm")</td>
+                <td><a asp-action="Details" asp-route-id="@campaign.Id" class="btn btn-sm btn-outline-primary">Details</a></td>
+            </tr>
+        }
+    </tbody>
+</table>

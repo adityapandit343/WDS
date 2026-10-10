@@ -1,0 +1,46 @@
+@model IEnumerable<WhatsAppBusinessInbox.Models.Feedback>
+@{
+    ViewData["Title"] = "Feedback";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <h2 class="mb-0">Call feedback</h2>
+    <a asp-action="Send" class="btn btn-primary">Send feedback request</a>
+</div>
+
+<div class="row g-3 mb-4">
+    <div class="col-md-3"><div class="card"><div class="card-body"><h6>Total</h6><h3>@ViewBag.Total</h3></div></div></div>
+    <div class="col-md-3"><div class="card border-success"><div class="card-body"><h6>Satisfied</h6><h3>@ViewBag.Satisfied</h3></div></div></div>
+    <div class="col-md-3"><div class="card border-danger"><div class="card-body"><h6>Unsatisfied</h6><h3>@ViewBag.Unsatisfied</h3></div></div></div>
+    <div class="col-md-3"><div class="card border-secondary"><div class="card-body"><h6>Awaiting reply</h6><h3>@ViewBag.Pending</h3></div></div></div>
+</div>
+
+<table class="table align-middle">
+    <thead>
+        <tr>
+            <th>Phone</th>
+            <th>Call id</th>
+            <th>Status</th>
+            <th>Response</th>
+            <th>Sent</th>
+            <th>Responded</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@item.Phone</td>
+                <td><code>@item.CallId</code></td>
+                <td>
+                    <span class="badge @(item.Status == "satisfied" ? "bg-success" : item.Status == "unsatisfied" ? "bg-danger" : "bg-secondary")">
+                        @item.Status
+                    </span>
+                </td>
+                <td>@item.ResponseText</td>
+                <td>@item.CreatedAt.ToString("yyyy-MM-dd HH:mm")</td>
+                <td>@(item.RespondedAt?.ToString("yyyy-MM-dd HH:mm") ?? "-")</td>
+            </tr>
+        }
+    </tbody>
+</table>

@@ -1,0 +1,62 @@
+@model WhatsAppBusinessInbox.Models.CampaignCreateViewModel
+@{
+    ViewData["Title"] = "New campaign";
+    var templates = ViewBag.Templates as Microsoft.AspNetCore.Mvc.Rendering.SelectList;
+}
+
+<h2>New campaign</h2>
+
+<div class="row">
+    <div class="col-md-7">
+        <form asp-action="Create" method="post">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+            <div class="mb-3">
+                <label asp-for="Name" class="form-label"></label>
+                <input asp-for="Name" class="form-control" />
+                <span asp-validation-for="Name" class="text-danger"></span>
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="TemplateName" class="form-label"></label>
+                <select asp-for="TemplateName" asp-items="templates" class="form-select">
+                    <option value="">-- select an approved template --</option>
+                </select>
+                <span asp-validation-for="TemplateName" class="text-danger"></span>
+                <div class="form-text">Templates come from <a asp-controller="Templates" asp-action="Index">Templates</a> (sync from Meta first).</div>
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="TemplateLanguage" class="form-label"></label>
+                <input asp-for="TemplateLanguage" class="form-control" />
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="TemplateVariablesJson" class="form-label"></label>
+                <textarea asp-for="TemplateVariablesJson" class="form-control" rows="3"></textarea>
+                <span asp-validation-for="TemplateVariablesJson" class="text-danger"></span>
+                <div class="form-text">JSON keyed by template parameter order, e.g. <code>{"1":"Alice","2":"Order #42"}</code>.</div>
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="AudienceMode" class="form-label"></label>
+                <select asp-for="AudienceMode" class="form-select">
+                    <option value="all">All opted-in contacts</option>
+                    <option value="tag">Contacts with a tag</option>
+                </select>
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="Tag" class="form-label"></label>
+                <input asp-for="Tag" class="form-control" />
+            </div>
+
+            <button type="submit" class="btn btn-primary">Create draft</button>
+            <a asp-action="Index" class="btn btn-secondary">Cancel</a>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

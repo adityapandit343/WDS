@@ -1,0 +1,31 @@
+@model WhatsAppBusinessInbox.Models.Contact
+
+@{
+    ViewData["Title"] = "Edit Contact";
+}
+
+<div class="container">
+    <h2>Edit Contact</h2>
+    <form asp-action="Edit">
+        <input type="hidden" asp-for="Id" />
+        <div class="form-group mb-3">
+            <label asp-for="Name" class="form-label">Name</label>
+            <input asp-for="Name" class="form-control" required />
+        </div>
+        <div class="form-group mb-3">
+            <label asp-for="Phone" class="form-label">Phone</label>
+            <input asp-for="Phone" class="form-control" required />
+        </div>
+        <div class="form-group mb-3">
+            <label asp-for="Tags" class="form-label">Tags</label>
+            <input asp-for="Tags" class="form-control" />
+        </div>
+        <div class="form-group mb-3">
+            <label>
+                <input asp-for="OptIn" /> Opt In
+            </label>
+        </div>
+        <button type="submit" class="btn btn-primary">Save</button>
+        <a asp-action="Index" class="btn btn-secondary">Cancel</a>
+    </form>
+</div>

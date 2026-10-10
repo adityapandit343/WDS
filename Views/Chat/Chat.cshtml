@@ -1,0 +1,146 @@
+@model IEnumerable<WhatsAppBusinessInbox.Models.Message>
+@{
+    ViewData["Title"] = "Chat";
+    var contact = ViewBag.Contact as WhatsAppBusinessInbox.Models.Contact;
+    var contacts = ViewBag.Contacts as List<WhatsAppBusinessInbox.Models.Contact> ?? new();
+}
+
+<div class="container-fluid">
+    <div class="row" style="height: calc(100vh - 160px);">
+        <!-- Contact list -->
+        <div class="col-md-4 border-end d-flex flex-column p-0">
+            <div class="p-3 border-bottom">
+                <input type="text" class="form-control" placeholder="Search contacts..." id="searchContacts">
+            </div>
+            <div class="list-group list-group-flush flex-grow-1 overflow-auto" id="contactsList">
+                @foreach (var c in contacts)
+                {
+                    <a href="/Chat/Chat/@c.Id"
+                       class="list-group-item list-group-item-action @(c.Id == contact?.Id ? "active" : "")">
+                        <div class="d-flex w-100 justify-content-between">
+                            <h6 class="mb-1">@c.Name</h6>
+                            <small>@c.LastMessageAt?.ToString("HH:mm")</small>
+                        </div>
+                        <p class="mb-1 small">@c.Phone</p>
+                    </a>
+                }
+            </div>
+        </div>
+
+        <!-- Conversation -->
+        <div class="col-md-8 d-flex flex-column p-0">
+            <div class="p-3 border-bottom bg-white">
+                <h5 class="mb-0">@contact?.Name</h5>
+                <small class="text-muted">@contact?.Phone</small>
+            </div>
+
+            <div class="flex-grow-1 overflow-auto p-3" id="messagesContainer" style="background-color: #efeae2;">
+                @foreach (var msg in Model)
+                {
+                    <div class="d-flex @(msg.Direction == "Out" ? "justify-content-end" : "justify-content-start") mb-2">
+                        <div class="@(msg.Direction == "Out" ? "bg-success text-white" : "bg-white") p-2 rounded shadow-sm" style="max-width: 70%;">
+                            <div>@msg.Body</div>
+                            <small class="@(msg.Direction == "Out" ? "text-white-50" : "text-muted")">
+                                @msg.CreatedAt.ToLocalTime().ToString("HH:mm")
+                                @if (msg.Status == "read") { <span>&#10003;&#10003;</span> }
+                                else if (msg.Status == "delivered") { <span>&#10003;</span> }
+                            </small>
+                        </div>
+                    </div>
+                }
+            </div>
+
+            <div class="p-3 border-top bg-white">
+                <form id="sendMessageForm">
+                    @Html.AntiForgeryToken()
+                    <input type="hidden" id="contactId" value="@contact?.Id">
+                    <div class="input-group">
+                        <input type="text" class="form-control" id="messageInput" placeholder="Type a message..." autocomplete="off" required>
+                        <button type="submit" class="btn btn-success">Send</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        const contactId = @(contact?.Id ?? 0);
+        let lastMessageId = @(Model.LastOrDefault()?.Id ?? 0);
+        const container = document.getElementById('messagesContainer');
+        const token = document.querySelector('#sendMessageForm input[name="__RequestVerificationToken"]').value;
+
+        container.scrollTop = container.scrollHeight;
+
+        function escapeHtml(value) {
+            return (value ?? '').toString().replace(/[&<>"']/g, c => ({
+                '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
+            }[c]));
+        }
+
+        function appendMessage(msg) {
+            const out = msg.direction === 'Out';
+            const div = document.createElement('div');
+            div.className = `d-flex ${out ? 'justify-content-end' : 'justify-content-start'} mb-2`;
+            div.innerHTML = `
+                <div class="${out ? 'bg-success text-white' : 'bg-white'} p-2 rounded shadow-sm" style="max-width: 70%;">
+                    <div>${escapeHtml(msg.body)}</div>
+                    <small class="${out ? 'text-white-50' : 'text-muted'}">
+                        ${new Date(msg.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                        ${msg.status === 'read' ? '&#10003;&#10003;' : msg.status === 'delivered' ? '&#10003;' : ''}
+                    </small>
+                </div>`;
+            container.appendChild(div);
+            if (msg.id > lastMessageId) lastMessageId = msg.id;
+        }
+
+        async function pollMessages() {
+            try {
+                const response = await fetch(`/Chat/GetMessages?contactId=${contactId}&lastId=${lastMessageId}`);
+                if (!response.ok) return;
+                const messages = await response.json();
+                if (messages.length > 0) {
+                    messages.forEach(appendMessage);
+                    container.scrollTop = container.scrollHeight;
+                }
+            } catch (e) {
+                console.error('Polling failed', e);
+            }
+        }
+
+        document.getElementById('sendMessageForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const input = document.getElementById('messageInput');
+            const body = input.value.trim();
+            if (!body) return;
+
+            const response = await fetch('/Chat/SendMessage', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                    'RequestVerificationToken': token
+                },
+                body: `contactId=${contactId}&body=${encodeURIComponent(body)}&__RequestVerificationToken=${encodeURIComponent(token)}`
+            });
+
+            const result = await response.json();
+            if (result.success) {
+                input.value = '';
+                appendMessage(result);
+                container.scrollTop = container.scrollHeight;
+            } else {
+                alert(result.error || 'Failed to send message.');
+            }
+        });
+
+        document.getElementById('searchContacts').addEventListener('input', (e) => {
+            const term = e.target.value.toLowerCase();
+            document.querySelectorAll('#contactsList a').forEach(a => {
+                a.style.display = a.textContent.toLowerCase().includes(term) ? '' : 'none';
+            });
+        });
+
+        setInterval(pollMessages, 3000);
+    </script>
+}

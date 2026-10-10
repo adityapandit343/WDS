@@ -1,0 +1,33 @@
+@model IEnumerable<WhatsAppBusinessInbox.Models.Contact>
+
+@{
+    ViewData["Title"] = "Inbox";
+}
+
+<div class="container-fluid">
+    <div class="row h-100">
+        <div class="col-md-4 border-end">
+            <div class="p-3">
+                <h5>Contacts</h5>
+                <input type="text" class="form-control mb-3" placeholder="Search contacts..." id="searchContacts">
+                <div class="list-group" id="contactsList">
+                    @foreach (var contact in Model)
+                    {
+                        <a href="/Chat/Chat/@contact.Id" class="list-group-item list-group-item-action">
+                            <div class="d-flex w-100 justify-content-between">
+                                <h6 class="mb-1">@contact.Name</h6>
+                                <small>@contact.LastMessageAt?.ToString("HH:mm")</small>
+                            </div>
+                            <p class="mb-1 text-muted">@contact.Phone</p>
+                        </a>
+                    }
+                </div>
+            </div>
+        </div>
+        <div class="col-md-8">
+            <div class="p-3">
+                <h5>Select a contact to start chatting</h5>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,51 @@
+@model IEnumerable<WhatsAppBusinessInbox.Models.Template>
+
+@{
+    ViewData["Title"] = "Templates";
+}
+
+<div class="container">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h2>Message Templates</h2>
+        <div>
+            <form asp-action="Sync" method="post" class="d-inline">
+                <button type="submit" class="btn btn-primary">Sync from Meta</button>
+            </form>
+            <a asp-action="Create" class="btn btn-success">Create Template</a>
+        </div>
+    </div>
+
+    <table class="table align-middle">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Language</th>
+                <th>Category</th>
+                <th>Status</th>
+                <th>Body</th>
+                <th>Last Synced</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>@item.Name</td>
+                    <td>@item.Language</td>
+                    <td>@item.Category</td>
+                    <td>
+                        <span class="badge @(item.Status == "APPROVED" || item.Status == "approved" ? "bg-success" : item.Status == "REJECTED" || item.Status == "rejected" ? "bg-danger" : "bg-warning text-dark")">
+                            @item.Status
+                        </span>
+                    </td>
+                    <td class="text-truncate" style="max-width: 320px;">@item.BodyText</td>
+                    <td>@item.SyncedAt.ToString("yyyy-MM-dd HH:mm")</td>
+                    <td>
+                        <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-sm btn-outline-danger">Delete</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
